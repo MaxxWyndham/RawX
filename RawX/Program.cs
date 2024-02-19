@@ -182,8 +182,8 @@ void extractPth(string path, bool keep = false)
                         dw.WriteLine($"v {mesh.Points[(int)face.V3].X + tX} {-mesh.Points[(int)face.V3].Y + tY} {-mesh.Points[(int)face.V3].Z + tZ} 1");
                         dw.WriteLine($"v {mesh.Points[(int)face.V4].X + tX} {-mesh.Points[(int)face.V4].Y + tY} {-mesh.Points[(int)face.V4].Z + tZ} 1");
 
-                        dw.WriteLine($"f {v + 1}/{v + 1} {v + 2}/{v + 2} {v + 4}/{v + 3}");
-                        dw.WriteLine($"f {v + 1}/{v + 1} {v + 4}/{v + 3} {v + 3}/{v + 4}");
+                        dw.WriteLine($"f {v + 4}/{v + 3} {v + 2}/{v + 2} {v + 1}/{v + 1}");
+                        dw.WriteLine($"f {v + 3}/{v + 4} {v + 4}/{v + 3} {v + 1}/{v + 1}");
 
                         v += 4;
                         f++;
@@ -299,8 +299,8 @@ void extractPth(string path, bool keep = false)
                     dw.WriteLine($"vt {face.UV4.U / width} {1f - face.UV4.V / height}");
                     dw.WriteLine($"v {mesh.Points[(int)face.V4].X} {-mesh.Points[(int)face.V4].Y} {-mesh.Points[(int)face.V4].Z} 1");
 
-                    dw.WriteLine($"f {v + 1}/{v + 1} {v + 2}/{v + 2} {v + 3}/{v + 3}");
-                    dw.WriteLine($"f {v + 4}/{v + 4} {v + 3}/{v + 3} {v + 2}/{v + 2}");
+                    dw.WriteLine($"f {v + 3}/{v + 3} {v + 2}/{v + 2} {v + 1}/{v + 1}");
+                    dw.WriteLine($"f {v + 2}/{v + 2} {v + 3}/{v + 3} {v + 4}/{v + 4}");
                     v += 4;
                 }
 
