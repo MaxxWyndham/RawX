@@ -6,7 +6,11 @@ Dictionary<string, dynamic> imageLookup = [];
 string? filePth = args.Where(s => s.EndsWith(".pth", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 string? fileDat = args.Where(s => s.EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
-if (filePth is null | fileDat is null) { return; }
+if (filePth is null | fileDat is null) 
+{
+    Console.WriteLine("Both a PTH and a DAT are expected");
+    return; 
+}
 
 extractPth(filePth, true);
 
