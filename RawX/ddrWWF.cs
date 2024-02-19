@@ -6,11 +6,11 @@
 
         public ushort OffsetX { get; set; }
 
-        public ushort OffsetXMultiplier { get; set; }
+        public short OffsetXMultiplier { get; set; }
 
         public ushort OffsetY { get; set; }
 
-        public ushort OffsetYMultiplier { get; set; }
+        public short OffsetYMultiplier { get; set; }
 
         public byte C { get; set; }
         public byte D { get; set; }
@@ -207,9 +207,9 @@
                     var track = new TrackSection
                     {
                         OffsetX = br.ReadUInt16(),
-                        OffsetXMultiplier = br.ReadUInt16(),
+                        OffsetXMultiplier = br.ReadInt16(),
                         OffsetY = br.ReadUInt16(),
-                        OffsetYMultiplier = br.ReadUInt16(),
+                        OffsetYMultiplier = br.ReadInt16(),
                         C = br.ReadByte(),
                         D = br.ReadByte(),
                         Rows = br.ReadByte(),
