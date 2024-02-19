@@ -30,7 +30,16 @@ namespace RawX
             {
                 while (br.BaseStream.Position < br.BaseStream.Length)
                 {
-                    pth.Contents.Add(new PTHEntry { Name = br.ReadNullTerminatedString(), Size = (int)br.ReadUInt32(), Offset = (int)br.ReadUInt32() });
+                    PTHEntry entry = new() { Name = br.ReadNullTerminatedString(), Size = (int)br.ReadUInt32(), Offset = (int)br.ReadUInt32() };
+
+                    if (!string.IsNullOrEmpty(entry.Name))
+                    {
+                        pth.Contents.Add(entry);
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
 
                 pth.Size = pth.Contents.Sum(c => c.Size);
