@@ -1,5 +1,6 @@
 ﻿using RawX;
 using System.Drawing.Imaging;
+using System.Numerics;
 
 Dictionary<string, dynamic> imageLookup = [];
 
@@ -142,26 +143,35 @@ void extractPth(string path, bool keep = false)
             int newWidth = spr.Width;
             int newHeight = spr.Height;
 
-            if ((spr.Width & (spr.Width - 1)) != 0)
+            if (!BitOperations.IsPow2(spr.Width))
             {
                 newWidth = 1;
                 while (newWidth < spr.Width) { newWidth <<= 1; }
                 resize = true;
             }
 
-            if ((spr.Height & (spr.Height - 1)) != 0)
+            if (!BitOperations.IsPow2(spr.Height))
             {
                 newHeight = 1;
                 while (newHeight < spr.Height) { newHeight <<= 1; }
                 resize = true;
             }
 
-            if (resize) { bitmap = bitmap.Resize(newWidth, newHeight); }
+            if (resize)
+            {
+                Console.WriteLine($"Resizing {spr.Width}x{spr.Height} to {newWidth}x{newHeight}");
+
+                bitmap = bitmap.Resize(newWidth, newHeight);
+            }
         }
 
         bitmap.Save(Path.Combine(destination.FullName, $"{spr.Name}.png"), ImageFormat.Png);
 
-        if (!settings.KeepProcessedFiles) { item.Delete(); }
+        if (!settings.KeepProcessedFiles)
+        {
+            Console.WriteLine($"Deleting {item.Name}");
+            item.Delete();
+        }
     }
 
     foreach (var item in destination.GetFiles("*.wmf"))
@@ -230,7 +240,11 @@ void extractPth(string path, bool keep = false)
             }
         }
 
-        if (!settings.KeepProcessedFiles) { item.Delete(); }
+        if (!settings.KeepProcessedFiles)
+        {
+            Console.WriteLine($"Deleting {item.Name}");
+            item.Delete();
+        }
     }
 
     foreach (var item in destination.GetFiles("*.wwf"))
@@ -336,7 +350,7 @@ void extractPth(string path, bool keep = false)
 
                 m = 0;
 
-                foreach(var thing in section.Things)
+                foreach (var thing in section.Things)
                 {
                     dw.WriteLine($"v {(section.OffsetX + section.OffsetXMultiplier * 65535 + thing.P.X) * settings.ScaleFactor} {(-section.OffsetY + section.OffsetYMultiplier * -65535 + -thing.P.Y) * settings.ScaleFactor} {-thing.P.Z * settings.ScaleFactor} 1");
                 }
@@ -362,7 +376,11 @@ void extractPth(string path, bool keep = false)
             }
         }
 
-        if (!settings.KeepProcessedFiles) { item.Delete(); }
+        if (!settings.KeepProcessedFiles)
+        {
+            Console.WriteLine($"Deleting {item.Name}");
+            item.Delete();
+        }
     }
 
     foreach (var item in destination.GetFiles("*.s33"))
@@ -431,7 +449,11 @@ void extractPth(string path, bool keep = false)
             }
         }
 
-        if (!settings.KeepProcessedFiles) { item.Delete(); }
+        if (!settings.KeepProcessedFiles)
+        {
+            Console.WriteLine($"Deleting {item.Name}");
+            item.Delete();
+        }
     }
 
     if (!keep && !settings.KeepProcessedFiles)
