@@ -7,7 +7,10 @@ Settings settings = Settings.Load("settings.json");
 
 if (args.Length == 0)
 {
-
+    foreach (var item in new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).GetFiles("*.pth"))
+    {
+        extractPth(item.FullName, true);
+    }
 }
 else if (args.Length == 1 && args[0].Equals("--config", StringComparison.CurrentCultureIgnoreCase))
 {
