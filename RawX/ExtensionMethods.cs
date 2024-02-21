@@ -1,4 +1,8 @@
-﻿namespace RawX
+﻿using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing;
+
+namespace RawX
 {
     public static class ExtensionMethods
     {
@@ -33,6 +37,30 @@
             } while (c > 0);
 
             return r;
+        }
+
+        public static Bitmap Resize(this Bitmap b, int width, int height)
+        {
+            if (b.PixelFormat == PixelFormat.Format8bppIndexed) { return b; }
+
+            Bitmap d = new(width, height);
+
+            using (Graphics graphics = Graphics.FromImage(d))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (ImageAttributes wrapMode = new())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(b, new Rectangle(0, 0, width, height), 0, 0, b.Width, b.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return d;
         }
     }
 }
