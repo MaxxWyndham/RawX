@@ -64,7 +64,7 @@ namespace RawX
 
                 for (int i = 0; i < colours; i++)
                 {
-                    spr.Colours.Add(PSX5551ToColor(br.ReadUInt16(), ChannelOrder.BGR));
+                    spr.Colours.Add(PSX5551ToColor(br.ReadUInt16(), ChannelOrder.BGR, i == 0));
                 }
 
                 br.ReadUInt16();    // ?
