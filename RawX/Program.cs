@@ -19,7 +19,7 @@ else if (args.Length == 1 && args[0].Equals("--config", StringComparison.Current
     {
         Console.Clear();
 
-        Console.WriteLine("RawX v1.5");
+        Console.WriteLine("RawX v1.6");
         Console.WriteLine();
 
         Console.ForegroundColor = ConsoleColor.Red;
@@ -228,8 +228,8 @@ void extractPth(string path, bool keep = false)
                     dw.WriteLine($"vt {face.UV3.U / width} {1f - face.UV3.V / height}");
                     dw.WriteLine($"vt {face.UV4.U / width} {1f - face.UV4.V / height}");
 
-                    dw.WriteLine($"f {v + face.V1}/{vt + 1} {v + face.V2}/{vt + 2} {v + face.V3}/{vt + 3}");
-                    dw.WriteLine($"f {v + face.V4}/{vt + 4} {v + face.V3}/{vt + 3} {v + face.V2}/{vt + 2}");
+                    dw.WriteLine($"f {v + face.V3}/{vt + 3} {v + face.V2}/{vt + 2} {v + face.V1}/{vt + 1}");
+                    dw.WriteLine($"f {v + face.V2}/{vt + 2} {v + face.V3}/{vt + 3} {v + face.V4}/{vt + 4}");
 
                     vt += 4;
                 }
@@ -437,8 +437,8 @@ void extractPth(string path, bool keep = false)
                     dw.WriteLine($"vt {face.UV3.U / width} {1f - face.UV3.V / height}");
                     dw.WriteLine($"vt {face.UV4.U / width} {1f - face.UV4.V / height}");
 
-                    dw.WriteLine($"f {v + face.V1}/{vt + 1} {v + face.V2}/{vt + 2} {v + face.V3}/{vt + 3}");
-                    dw.WriteLine($"f {v + face.V4}/{vt + 4} {v + face.V3}/{vt + 3} {v + face.V2}/{vt + 2}");
+                    dw.WriteLine($"f {v + face.V3}/{vt + 3} {v + face.V2}/{vt + 2} {v + face.V1}/{vt + 1}");
+                    dw.WriteLine($"f {v + face.V2}/{vt + 2} {v + face.V3}/{vt + 3} {v + face.V4}/{vt + 4}");
 
                     vt += 4;
                 }
