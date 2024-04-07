@@ -62,5 +62,14 @@ namespace RawX
 
             return d;
         }
+
+        public static byte Peek(this BinaryReader br)
+        {
+            byte b = br.ReadByte();
+
+            br.BaseStream.Seek(-1, SeekOrigin.Current);
+
+            return b;
+        }
     }
 }

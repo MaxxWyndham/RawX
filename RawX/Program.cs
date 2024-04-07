@@ -19,7 +19,7 @@ else if (args.Length == 1 && args[0].Equals("--config", StringComparison.Current
     {
         Console.Clear();
 
-        Console.WriteLine("RawX v1.6");
+        Console.WriteLine("RawX v1.7");
         Console.WriteLine();
 
         Console.ForegroundColor = ConsoleColor.Red;
@@ -252,6 +252,62 @@ void extractPth(string path, bool keep = false)
         Console.WriteLine($"WWF : {item.Name}");
 
         WWF wwf = WWF.Load(item.FullName);
+
+        string instsPath = Path.Combine(destination.FullName, "RESOURCE", "INSTS.DAT");
+
+        if (Path.Exists(instsPath))
+        {
+            InstsDAT insts = InstsDAT.Load(instsPath);
+
+            using (TextWriter dw = new StreamWriter(Path.Combine(destination.FullName, "INSTS.OBJ")))
+            {
+                dw.WriteLine($"mtllib {Path.GetFileNameWithoutExtension(item.FullName)}.MTL");
+
+                int m = 0;
+                int v = 0;
+
+                for (int i = 0; i < insts.Instances.Count; i++)
+                {
+                    var offset = insts.Instances[i];
+                    var mesh = insts.Meshes[offset.Offset];
+
+                    dw.WriteLine($"g insts_{m}_{offset.X}_{offset.Y}_{offset.Z}_G{offset.G}");
+
+                    foreach (var face in mesh.Faces)
+                    {
+                        string textureName = wwf.Textures[face.MaterialIndex];
+                        float width = 127f;
+                        float height = 127f;
+
+                        if (imageLookup.TryGetValue(textureName, out dynamic? value))
+                        {
+                            width = value.X - 1f;
+                            height = value.Y - 1f;
+                        }
+
+                        dw.WriteLine($"usemtl {wwf.Textures[face.MaterialIndex]}");
+
+                        dw.WriteLine($"vt {face.UV1.U / width} {1f - face.UV1.V / height}");
+                        dw.WriteLine($"v {mesh.Points[(int)face.V1].X + offset.X} {-mesh.Points[(int)face.V1].Y + -offset.Y} {-mesh.Points[(int)face.V1].Z + -offset.Z} 1");
+
+                        dw.WriteLine($"vt {face.UV2.U / width} {1f - face.UV2.V / height}");
+                        dw.WriteLine($"v {mesh.Points[(int)face.V2].X + offset.X} {-mesh.Points[(int)face.V2].Y + -offset.Y} {-mesh.Points[(int)face.V2].Z + -offset.Z} 1");
+
+                        dw.WriteLine($"vt {face.UV3.U / width} {1f - face.UV3.V / height}");
+                        dw.WriteLine($"v {mesh.Points[(int)face.V3].X + offset.X} {-mesh.Points[(int)face.V3].Y + -offset.Y} {-mesh.Points[(int)face.V3].Z + -offset.Z} 1");
+
+                        dw.WriteLine($"vt {face.UV4.U / width} {1f - face.UV4.V / height}");
+                        dw.WriteLine($"v {mesh.Points[(int)face.V4].X + offset.X} {-mesh.Points[(int)face.V4].Y + -offset.Y} {-mesh.Points[(int)face.V4].Z + -offset.Z} 1");
+
+                        dw.WriteLine($"f {v + 1}/{v + 1} {v + 2}/{v + 2} {v + 3}/{v + 3}");
+                        dw.WriteLine($"f {v + 4}/{v + 4} {v + 3}/{v + 3} {v + 2}/{v + 2}");
+                        v += 4;
+                    }
+
+                    m++;
+                }
+            }
+        }
 
         using (TextWriter dw = new StreamWriter(Path.ChangeExtension(item.FullName, "mtl")))
         {
