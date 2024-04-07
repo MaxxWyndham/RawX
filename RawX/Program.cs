@@ -19,7 +19,7 @@ else if (args.Length == 1 && args[0].Equals("--config", StringComparison.Current
     {
         Console.Clear();
 
-        Console.WriteLine("RawX v1.4");
+        Console.WriteLine("RawX v1.5");
         Console.WriteLine();
 
         Console.ForegroundColor = ConsoleColor.Red;
