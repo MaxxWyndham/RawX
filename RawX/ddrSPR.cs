@@ -72,21 +72,22 @@ namespace RawX
                 spr.Height = br.ReadUInt16();
                 br.ReadUInt16();    // ?
 
+                int dataWidth = spr.Width + 3 & ~0x3;
+
                 spr.Data = new byte[spr.Width * spr.Height];
 
                 int pointer = 0;
 
                 for (int y = 0; y < spr.Height; y++)
                 {
-                    for (int x = 0; x < spr.Width; x++)
+                    for (int x = 0; x < dataWidth; x++)
                     {
                         byte i = br.ReadByte();
 
                         if (mode == 1)
                         {
-                            spr.Data[pointer++] = (byte)(i & 0xf);
-                            if (x + 1 < spr.Width) { spr.Data[pointer++] = (byte)(i >> 4); }
-                            //spr.Data[pointer++] = (byte)(i >> 4);
+                            if (pointer < spr.Data.Length) { spr.Data[pointer++] = (byte)(i & 0xf); }
+                            if (pointer < spr.Data.Length) { spr.Data[pointer++] = (byte)(i >> 4); }
                         }
                         else
                         {
@@ -96,7 +97,7 @@ namespace RawX
                         if (mode == 1) { x++; }
                     }
 
-                    if (spr.Width % 4 > 0 && spr.Width % 2 == 0) { br.ReadByte(); }
+                    pointer -= dataWidth - spr.Width;
                 }
             }
 
@@ -105,8 +106,9 @@ namespace RawX
 
         public Bitmap GetBitmap()
         {
-            Bitmap bmp = new(Width, Height, PixelFormat.Format32bppArgb);
-            BitmapData bmpdata = bmp.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            PixelFormat format = Data.Any(d => d == 0) ? PixelFormat.Format32bppArgb : PixelFormat.Format24bppRgb;
+            Bitmap bmp = new(Width, Height, format);
+            BitmapData bmpdata = bmp.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadWrite, format);
 
             using (MemoryStream nms = new())
             {
@@ -118,7 +120,7 @@ namespace RawX
                         nms.WriteByte(c.B);
                         nms.WriteByte(c.G);
                         nms.WriteByte(c.R);
-                        nms.WriteByte(c.A);
+                        if (format == PixelFormat.Format32bppArgb) { nms.WriteByte(c.A); }
                     }
                 }
 
